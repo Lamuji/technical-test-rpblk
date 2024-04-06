@@ -1,14 +1,14 @@
-FROM node:18.17.0 AS development
+FROM node:latest AS development
 
 WORKDIR /republike/src/app
 
 COPY package*.json ./
-COPY tsconfig.json ./
+COPY prisma ./prisma/
 
 RUN npm install
 
 COPY . .
 
-RUN npm run build
+CMD /bin/sh -c "npx prisma generate && npx prisma migrate dev --name init && npm run start:dev"
 
 EXPOSE 3000

@@ -1,0 +1,52 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from 'src/prisma.service';
+import { UsersService } from 'src/users/users.service';
+import { LoginDto } from './dto/login-user.dto';
+import * as bcrypt from 'bcrypt'
+import { RegisterUserDto } from './dto/register-user.dto';
+import { User } from 'src/users/users.model';
+
+
+@Injectable()
+export class AuthService {
+    constructor(
+        private readonly prismaService: PrismaService,
+        private jwtService: JwtService,
+        private readonly usersService: UsersService){}
+
+
+        async login(loginDto: LoginDto): Promise<any> {
+            const {username, password} = loginDto;
+            const users = await this.prismaService.client.user.findUnique({
+                where:{ username }
+            })
+            if (!users)
+                throw new NotFoundException('User not found.')
+
+            const validatePassword = await bcrypt.compare(password, users.password)
+
+            if (!validatePassword)
+                throw new NotFoundException('Invalid password')
+            const token = this.jwtService.sign(
+                { username},
+                { secret: process.env.JWT_SECRET, expiresIn: '1h' }
+              );
+              return { token };
+    }
+
+    async register(createDto: RegisterUserDto): Promise<any> {
+        const registerUsers = new User()
+        registerUsers.name = createDto.name, 
+        registerUsers.username = createDto.username, 
+        registerUsers.email = createDto.email, 
+        registerUsers.password = await bcrypt.hash(createDto.password, 10)
+        
+        const user = await this.usersService.registerUser(registerUsers)
+        const token = this.jwtService.sign(
+            { username: user.username },
+            { secret: process.env.JWT_SECRET, expiresIn: '1h' }
+          );
+          return { token };
+    }
+}
