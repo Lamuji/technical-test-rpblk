@@ -25,9 +25,9 @@ services:
       ALGORITHM: ${ALGORITHM}
       IV: ${IV}
     ports:
-      - 3001:3000
+      - 3001:3002
       - 9229:9229
-  
+
   frontend:
     build:
       dockerfile: Dockerfile
@@ -47,7 +47,7 @@ services:
       - 3000:3000
     links:
       - backend
-
+  
   postgres:
     image: postgres:latest
     env_file:
