@@ -1,52 +1,52 @@
 version: '3.8'
 services:
 
-  backend:
-    build:
-      dockerfile: Dockerfile
-      context: ./backend
-      target: development
-    volumes:
-      - ./backend:/republike/src/app
-      - /republike/src/app/node_modules
-    # RUN in debug mode: npm run start:debug --> Also start your vscode debugger
-    # Run in dev mode: npm run start:dev
-    # command: npm run start:debug
-    depends_on: 
-      - postgres
-    env_file:
-      - .env
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      NODE_ENV: ${NODE_ENV}
-      JWT_SECRET: ${JWT_SECRET}
-      PORT: ${PORT}
-      ENCRYPT_PASS: ${ENCRYPT_PASS}
-      ALGORITHM: ${ALGORITHM}
-      IV: ${IV}
-    ports:
-      - 3001:3002
-      - 9229:9229
+  # backend:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: ./backend
+  #     target: development
+  #   volumes:
+  #     - ./backend:/republike/src/app
+  #     - /republike/src/app/node_modules
+  #   # RUN in debug mode: npm run start:debug --> Also start your vscode debugger
+  #   # Run in dev mode: npm run start:dev
+  #   # command: npm run start:debug
+  #   depends_on: 
+  #     - postgres
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     DATABASE_URL: ${DATABASE_URL}
+  #     NODE_ENV: ${NODE_ENV}
+  #     JWT_SECRET: ${JWT_SECRET}
+  #     PORT: ${PORT}
+  #     ENCRYPT_PASS: ${ENCRYPT_PASS}
+  #     ALGORITHM: ${ALGORITHM}
+  #     IV: ${IV}
+  #   ports:
+  #     - 3001:3002
+  #     - 9229:9229
 
-  frontend:
-    build:
-      dockerfile: Dockerfile
-      context: ./frontend
-      target: development
-    volumes:
-      - ./frontend:/republike/frontend/src/app
-      - /republike/frontend/src/app/node_modules
-    env_file:
-      - .env
-    environment:
-      CLIENT_ID: ${CLIENT_ID}
-      CLIENT_SECRET: ${CLIENT_SECRET}
-      REDIRECT_URI: ${REDIRECT_URI}
-      GRANT_TYPE: ${GRANT_TYPE}
-    ports:
-      - 3000:3000
-    links:
-      - backend
+  # frontend:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: ./frontend
+  #     target: development
+  #   volumes:
+  #     - ./frontend:/republike/frontend/src/app
+  #     - /republike/frontend/src/app/node_modules
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     CLIENT_ID: ${CLIENT_ID}
+  #     CLIENT_SECRET: ${CLIENT_SECRET}
+  #     REDIRECT_URI: ${REDIRECT_URI}
+  #     GRANT_TYPE: ${GRANT_TYPE}
+  #   ports:
+  #     - 3000:3000
+  #   links:
+  #     - backend
   
   postgres:
     image: postgres:latest

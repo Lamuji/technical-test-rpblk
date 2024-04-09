@@ -17,9 +17,9 @@ export class AuthService {
 
 
         async login(loginDto: LoginDto): Promise<any> {
-            const {username, password} = loginDto;
+            const {email, password} = loginDto;
             const users = await this.prismaService.client.user.findUnique({
-                where:{ username }
+                where:{ email }
             })
             if (!users)
                 throw new NotFoundException('User not found.')
@@ -37,7 +37,8 @@ export class AuthService {
 
     async register(createDto: RegisterUserDto): Promise<any> {
         const registerUsers = new User()
-        registerUsers.name = createDto.name, 
+        registerUsers.lastname = createDto.lastname
+        registerUsers.firstname = createDto.firstname
         registerUsers.username = createDto.username, 
         registerUsers.email = createDto.email, 
         registerUsers.password = await bcrypt.hash(createDto.password, 10)

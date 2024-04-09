@@ -4,7 +4,6 @@ WORKDIR /republike/src/app
 
 COPY package*.json ./
 COPY prisma ./prisma/
-RUN curl -v https://registry.npmjs.com/
 
 RUN npm install
 

@@ -3,7 +3,10 @@ import { IsEmail, IsString, Length, isEmail } from "class-validator";
 
 export class RegisterUserDto {
     @IsString()
-    name: string
+    firstname: string
+
+    @IsString()
+    lastname: string
 
     @IsString()
     username: string;
@@ -13,4 +16,5 @@ export class RegisterUserDto {
     
     @IsString()
     password: string;
+
 }

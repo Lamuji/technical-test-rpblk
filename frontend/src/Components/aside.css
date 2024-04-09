@@ -1,0 +1,35 @@
+
+.sidebar {
+
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 24px;
+position: absolute;
+left: 32px;
+top: 100px;
+}
+
+.profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px;
+    gap: 12px;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0px;
+    gap: 24px;
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}

@@ -38,6 +38,7 @@
   .form-field {
     margin-bottom: 10px;
     width: 100%;
+    font-weight: bold;
   }
   .form-field input {
     width: 100%;
@@ -46,18 +47,11 @@
     border-radius: 4px;
     box-sizing: border-box;
   }
-  .form-field button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #4C5B9F; /* ou la couleur de votre choix */
-    color: white;
-    cursor: pointer;
-  }
+
+
   .sign-in {
     text-align: center;
-    color: white;
+    color: rgba(157, 157, 157, 1);
     margin-top: 20px;
   }
 
@@ -75,22 +69,12 @@
     margin-bottom: 5px;
     color: #333;
   }
-.text {
-  color: rgba(157, 157, 157, 1);
-
-}
-
-.titre {
-  font-weight:800;
-  font-size:large;
-  padding-bottom: 1rem;
-}
-.link {
+  .link {
     color: black;
     font-weight:bold
 }
 
 .button {
-  background-color: rgb(123, 97, 255);
+  background-color: #7B61FF;
   width: 100%;
 }
