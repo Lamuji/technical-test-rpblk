@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, Router } from 'react-router-dom'
+import { Link, Router, useNavigate } from 'react-router-dom'
 import './style.css'
 import logo from '../logo.png'
 import { Button } from '../@/components/ui/button'
@@ -7,35 +7,40 @@ import { Button } from '../@/components/ui/button'
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [firstname, setFirstName] = useState('');
+  const [lastname, setLastName] = useState('');
   const [username, setUsername] = useState('');
 
-  const handleSubmit = async (event: { preventDefault: () => void }) => {
+  const navigate = useNavigate(); // Initialisation de useNavigate pour la redirection
 
-    event.preventDefault(); // Pour éviter le rechargement de la page
-    // Envoie les données à l'API d'inscription
+  const handleSubmit = async (event: { preventDefault: () => void } ) => {
+    event.preventDefault(); // Pour éviter le rechargement de la page lors de la soumission du formulaire
+
     try {
-      const response = await fetch('localhost:3001/auth/register', { // Remplacez par votre URL d'API
+      const response = await fetch('http://localhost:3001/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          firstname,
+          lastname,
+          username,
           email,
           password,
-          firstName,
-          lastName,
-          username,
         }),
       });
-      const data = await response.json();
 
-      console.log(data);
-      // Redirection ou affichage d'un message en cas de succès
+      if (response.status === 200) { // Vérification si le code de statut est 200
+        console.log('Registration successful');
+        navigate('/home');
+      } else {
+        // Gérer les réponses non réussies ici (par exemple, afficher un message d'erreur)
+        console.error('Registration failed with status:', response.status);
+      }
     } catch (error) {
       console.error('Registration failed:', error);
-      // Gérer les erreurs d'inscription
+      // Gérer les erreurs de réseau ou autres erreurs inattendues ici
     }
   };
 
@@ -52,25 +57,25 @@ export default function Register() {
         <form onSubmit={handleSubmit}>
         <div className="form-field">
             <label htmlFor="email" className='field'>Email</label>
-            <input type="email" id="email" placeholder="Email"/>
+            <input type="email" id="email" placeholder="Email"   value={email} onChange={(e : React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} />
           </div>
           <div className="form-field">
             <label htmlFor="password" className='field'>Password</label>
-            <input type="password" id="password" placeholder="Password"/>
+            <input type="password" id="password" placeholder="Password" value={password} onChange={(e : React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
           </div>
           <div className="form-field">
             <label htmlFor="first-name" className='field'>First name</label>
-            <input type="text" id="first-name" placeholder="First name"/>
+            <input type="text" id="first-name" placeholder="First name" value={firstname} onChange={(e : React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}/>
           </div>
           <div className="form-field">
             <label htmlFor="last-name" className='field'>Last name</label>
-            <input type="text" id="last-name" placeholder="Last name"/>
+            <input type="text" id="last-name" placeholder="Last name" value={lastname} onChange={(e : React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}/>
           </div>
           <div className="form-field">
             <label htmlFor="username" className='field'>Username</label>
-            <input type="text" id="username" placeholder="Username"/>
+            <input type="text" id="username" placeholder="Username" value={username} onChange={(e : React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}/>
           </div>
-          <Button className='button' type="submit">Create profile</Button>
+          <Button className='button' type="submit" >Create profile <Link to='/home'/></Button>
         </form>
         <div className="sign-in">
             Already have an account? 

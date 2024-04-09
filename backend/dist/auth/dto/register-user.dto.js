@@ -16,7 +16,11 @@ class RegisterUserDto {
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], RegisterUserDto.prototype, "name", void 0);
+], RegisterUserDto.prototype, "firstname", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], RegisterUserDto.prototype, "lastname", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)

@@ -59,7 +59,7 @@ let AuthController = class AuthController {
 __decorate([
     (0, common_1.Post)('/login'),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, login_user_dto_1.LoginDto]),

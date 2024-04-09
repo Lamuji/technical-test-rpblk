@@ -1,13 +1,39 @@
-import React from 'react'
-import { Link, Router } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, Router, useNavigate } from 'react-router-dom'
 import './style.css'
 import logo from '../logo.png'
 import {Button} from '../@/components/ui/button'
 
 export default function Login() {
-  // const getLogged = () => {
-  //   fetch
-  // }
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // Pour la redirection après la connexion réussie
+  let token;
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
+    event.preventDefault(); // Empêche le rechargement de la page
+
+    try {
+      const response = await fetch('http://localhost:3001/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.status === 200) {
+        console.log('Connexion réussie');
+        const data = await response.json();
+        token = data.result.token;
+        localStorage.setItem('token', token);
+        navigate('/home'); 
+      } else {
+        console.error('Échec de la connexion, vérifiez votre e-mail/mot de passe'); 
+      }
+    } catch (error) {
+      console.error('Erreur de connexion:', error);
+    }
+  };
 
   return (
     <div className="container">
@@ -19,20 +45,29 @@ export default function Login() {
     <div className="right-side">
       <div className="form-container">
         <h3 className='titre'>Sign in</h3>
-        <form>
+        <form onSubmit={handleSubmit}>
         <div className="form-field">
             <label htmlFor="email" className='link'>Email</label>
-            <input type="email" id="email" placeholder="Email"/>
+            <input 
+              type="email" 
+              id="email" 
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}/>
           </div>
           <div className="form-field">
             <label htmlFor="password" className='link'>Password</label>
-            <input type="password" id="password" placeholder="Password"/>
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}/>
           </div>
-          <Button className='button'>Connexion</Button>
+          <Button type="submit" className='button'>Connexion</Button>
         </form>
         <div className="sign-in">
             <div className='text'>Don't have an account? <Link className='link 'to='/'> Sign up</Link></div>
-            
         </div>
       </div>
     </div>

@@ -7,8 +7,12 @@ import { useNavigate } from 'react-router-dom';
 
 
 export default function Aside() {
+
   const navigate = useNavigate();
-  const handleClick = () => navigate('/Login');
+  const handleClick = () => {
+    localStorage.removeItem('token')
+    navigate('/Login');
+  }
   return (
     <aside className="sidebar">
       <div className="profile">

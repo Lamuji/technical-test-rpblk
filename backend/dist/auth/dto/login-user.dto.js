@@ -17,7 +17,7 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.Length)(5, 10),
     __metadata("design:type", String)
-], LoginDto.prototype, "username", void 0);
+], LoginDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.Length)(6, 12),

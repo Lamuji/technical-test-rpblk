@@ -29,7 +29,7 @@ export class AuthService {
             if (!validatePassword)
                 throw new NotFoundException('Invalid password')
             const token = this.jwtService.sign(
-                { username},
+                { email},
                 { secret: process.env.JWT_SECRET, expiresIn: '1h' }
               );
               return { token };

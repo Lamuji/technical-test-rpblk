@@ -11,4 +11,4 @@ COPY . .
 
 CMD /bin/sh -c "npx prisma generate && npx prisma migrate dev --name init && npm run start:dev"
 
-EXPOSE 3000
+EXPOSE 3001

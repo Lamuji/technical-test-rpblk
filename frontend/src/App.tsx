@@ -1,15 +1,25 @@
 import React from 'react';
-//import logo from './logo.svg';
 import './App.css';
-import { Router, createBrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Home from './Home/Home';
+import Login from './Login/Login';
+import Register from './Register/Register';
+import PrivateRoutes from './utils/ProtectedRoute';
+
+
 
 function App() {
-  
   return (
-    <div>
-    <h3>HELLO TEST</h3>
+    <Router>
+      <Routes>
+        <Route element={<PrivateRoutes />}>
+          <Route path='/home' element={<Home />} />
+        </Route>
+        <Route path='/' element={<Register />} />
+        <Route path='/login' element={<Login />} />
 
-    </div>
+    </Routes>
+  </Router>
   );
 }
 

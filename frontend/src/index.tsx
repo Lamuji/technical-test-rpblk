@@ -15,14 +15,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <Router>
-      <Routes> 
-        <Route path='/' element={<Register />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/home' element={<Home />} />
-
-    </Routes>
-    </Router>
+    <App/>
   </React.StrictMode>
 );
 

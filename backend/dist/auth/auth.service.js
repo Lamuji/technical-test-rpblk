@@ -23,22 +23,23 @@ let AuthService = class AuthService {
         this.usersService = usersService;
     }
     async login(loginDto) {
-        const { username, password } = loginDto;
+        const { email, password } = loginDto;
         const users = await this.prismaService.client.user.findUnique({
-            where: { username }
+            where: { email }
         });
         if (!users)
             throw new common_1.NotFoundException('User not found.');
         const validatePassword = await bcrypt.compare(password, users.password);
         if (!validatePassword)
             throw new common_1.NotFoundException('Invalid password');
-        const token = this.jwtService.sign({ username }, { secret: process.env.JWT_SECRET, expiresIn: '1h' });
+        const token = this.jwtService.sign({ email }, { secret: process.env.JWT_SECRET, expiresIn: '1h' });
         return { token };
     }
     async register(createDto) {
         const registerUsers = new users_model_1.User();
-        registerUsers.name = createDto.name,
-            registerUsers.username = createDto.username,
+        registerUsers.lastname = createDto.lastname;
+        registerUsers.firstname = createDto.firstname;
+        registerUsers.username = createDto.username,
             registerUsers.email = createDto.email,
             registerUsers.password = await bcrypt.hash(createDto.password, 10);
         const user = await this.usersService.registerUser(registerUsers);

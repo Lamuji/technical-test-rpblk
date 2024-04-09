@@ -12,7 +12,7 @@ export class AuthController {
 
 
     @Post('/login')
-    async login(@Req() request: Request, @Res() response: Response, @Body() loginDto: LoginDto): Promise<any>{
+    async login(@Req() request: Request, @Res({passthrough: true}) response: Response, @Body() loginDto: LoginDto): Promise<any>{
         try {
             const result = await this.authService.login(loginDto);
             return response.status(200).json({
