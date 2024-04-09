@@ -35,6 +35,16 @@ let UsersController = class UsersController {
             });
         }
     }
+    async createPost(request, response, body) {
+        try {
+            const username = request.user.username;
+            const newTweet = await this.userService.createPost(username, body);
+            return newTweet;
+        }
+        catch (error) {
+            throw new common_1.HttpException('Failed to create a post', common_1.HttpStatus.BAD_REQUEST);
+        }
+    }
 };
 __decorate([
     (0, common_1.Get)('userlist'),
@@ -44,6 +54,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getAllUsers", null);
+__decorate([
+    (0, common_1.Post)('createPost'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)()),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object, Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "createPost", null);
 UsersController = __decorate([
     (0, common_1.Controller)("users"),
     __metadata("design:paramtypes", [users_service_1.UsersService])

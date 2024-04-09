@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res } from "@nestjs/common";
+import { Controller, Get, Post , Body, Req, Res, HttpException, HttpStatus } from "@nestjs/common";
 import { Request, Response} from 'express'
 import { UsersService } from "./users.service";
 
@@ -24,4 +24,15 @@ export class UsersController {
 
         }
     }
+
+    @Post('createPost')
+    async createPost(@Req() request, @Res() response, @Body() body) {
+        try {
+            const username = request.user.username; // Ou d'où vous récupérez l'username de l'utilisateur
+            const newTweet = await this.userService.createPost(username, body);
+            return newTweet; // Nest gère la réponse, pas besoin d'injecter @Res()
+          } catch (error) {
+            throw new HttpException('Failed to create a post', HttpStatus.BAD_REQUEST);
+          }
+        }
 }

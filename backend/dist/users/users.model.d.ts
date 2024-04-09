@@ -6,7 +6,7 @@ export declare class User implements Prisma.UserCreateInput {
     email: string;
     password: string;
 }
-export declare class Posts implements Prisma.PostsCreateInput {
+export declare class Post implements Prisma.PostCreateInput {
     username: string;
     firstname: string;
     lastname: string;

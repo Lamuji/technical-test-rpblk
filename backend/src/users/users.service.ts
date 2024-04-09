@@ -1,6 +1,6 @@
 
 import { PrismaService } from "src/prisma.service";
-import { User } from "./users.model";
+import { Post, User } from "./users.model";
 import { ConflictException, Injectable } from "@nestjs/common";
 
 @Injectable()
@@ -25,4 +25,15 @@ export class UsersService {
             data
         })
     }
+
+    async createPost(username: string, postMessage: any): Promise<Post> {
+        // Ici, vous mettriez la logique pour créer un nouveau tweet en utilisant le modèle de tweet
+        // et en sauvegardant le tweet dans la base de données.
+    
+        const newPost = new Post();
+        newPost.username = username;
+        newPost.message = postMessage.content; // Supposons que tweetContent contient une propriété 'content'
+        // ... autres propriétés et logique de sauvegarde
+        return await newPost.save();
+      }
 }
