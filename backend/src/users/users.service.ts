@@ -26,14 +26,16 @@ export class UsersService {
         })
     }
 
-    async createPost(username: string, postMessage: any): Promise<Post> {
-        // Ici, vous mettriez la logique pour créer un nouveau tweet en utilisant le modèle de tweet
-        // et en sauvegardant le tweet dans la base de données.
-    
-        const newPost = new Post();
-        newPost.username = username;
-        newPost.message = postMessage.content; // Supposons que tweetContent contient une propriété 'content'
-        // ... autres propriétés et logique de sauvegarde
-        return await newPost.save();
+    async createPost(username: string, message: string): Promise<any> {
+        return this.prismaService.client.post.create({
+          data: {
+            username,
+            message,
+            like: 0,
+            dislike: 0 // Initialisation du nombre de 'like' à 0
+          },
+        });
       }
+
+    async incrementLike()
 }

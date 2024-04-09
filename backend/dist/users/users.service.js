@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const prisma_service_1 = require("../prisma.service");
-const users_model_1 = require("./users.model");
 const common_1 = require("@nestjs/common");
 let UsersService = class UsersService {
     constructor(prismaService) {
@@ -33,11 +32,15 @@ let UsersService = class UsersService {
             data
         });
     }
-    async createPost(username, postMessage) {
-        const newPost = new users_model_1.Post();
-        newPost.username = username;
-        newPost.message = postMessage.content;
-        return await newPost.save();
+    async createPost(username, message) {
+        return this.prismaService.client.post.create({
+            data: {
+                username,
+                message,
+                like: 0,
+                dislike: 0
+            },
+        });
     }
 };
 UsersService = __decorate([
