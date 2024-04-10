@@ -9,6 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // Pour la redirection après la connexion réussie
   let token;
+  let userLogged;
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault(); // Empêche le rechargement de la page
 
@@ -20,13 +21,13 @@ export default function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
-
       if (response.status === 200) {
         console.log('Connexion réussie');
         const data = await response.json();
         token = data.result.token;
         localStorage.setItem('token', token);
-        navigate('/home'); 
+        navigate('/home');
+        userLogged = data.result.users;
       } else {
         console.error('Échec de la connexion, vérifiez votre e-mail/mot de passe'); 
       }

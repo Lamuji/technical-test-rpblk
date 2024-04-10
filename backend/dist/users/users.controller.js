@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
+const users_model_1 = require("./users.model");
 let UsersController = class UsersController {
     constructor(userService) {
         this.userService = userService;
@@ -35,15 +36,22 @@ let UsersController = class UsersController {
             });
         }
     }
-    async createPost(request, response, body) {
+    async getUserByEmail(response, email) {
         try {
-            const username = request.user.username;
-            const newTweet = await this.userService.createPost(username, body);
-            return newTweet;
+            const result = await this.userService.getUserByEmail(email);
+            return response.status(200).json({
+                result: result
+            });
         }
-        catch (error) {
-            throw new common_1.HttpException('Failed to create a post', common_1.HttpStatus.BAD_REQUEST);
+        catch (err) {
+            return response.status(500).json({
+                status: 'Error',
+                message: 'Internal server error.',
+            });
         }
+    }
+    async create(postData) {
+        return this.userService.createPost(postData);
     }
 };
 __decorate([
@@ -55,14 +63,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getAllUsers", null);
 __decorate([
-    (0, common_1.Post)('createPost'),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)()),
-    __param(2, (0, common_1.Body)()),
+    (0, common_1.Get)('getUser'),
+    __param(0, (0, common_1.Res)({ passthrough: true })),
+    __param(1, (0, common_1.Query)('email')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, Object]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "createPost", null);
+], UsersController.prototype, "getUserByEmail", null);
+__decorate([
+    (0, common_1.Post)('createPost'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [users_model_1.Post]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "create", null);
 UsersController = __decorate([
     (0, common_1.Controller)("users"),
     __metadata("design:paramtypes", [users_service_1.UsersService])

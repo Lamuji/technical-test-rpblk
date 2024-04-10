@@ -33,7 +33,8 @@ let AuthService = class AuthService {
         if (!validatePassword)
             throw new common_1.NotFoundException('Invalid password');
         const token = this.jwtService.sign({ email }, { secret: process.env.JWT_SECRET, expiresIn: '1h' });
-        return { token };
+        return { token, users: { email: users.email, username: users.username, firstname: users.firstname, lastname: users.lastname }
+        };
     }
     async register(createDto) {
         const registerUsers = new users_model_1.User();

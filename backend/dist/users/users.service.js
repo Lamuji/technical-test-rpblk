@@ -12,9 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const prisma_service_1 = require("../prisma.service");
 const common_1 = require("@nestjs/common");
+const jwt_1 = require("@nestjs/jwt");
+const library_1 = require("@prisma/client/runtime/library");
 let UsersService = class UsersService {
-    constructor(prismaService) {
+    constructor(prismaService, jwtService) {
         this.prismaService = prismaService;
+        this.jwtService = jwtService;
     }
     async getAllUsers() {
         return this.prismaService.client.user.findMany();
@@ -32,20 +35,38 @@ let UsersService = class UsersService {
             data
         });
     }
-    async createPost(username, message) {
+    async createPost(data) {
         return this.prismaService.client.post.create({
-            data: {
-                username,
-                message,
-                like: 0,
-                dislike: 0
-            },
+            data,
         });
     }
+    async getUserByEmail(email) {
+        try {
+            const user = await this.prismaService.client.user.findUnique({
+                where: {
+                    email: email,
+                },
+            });
+            if (!user) {
+                throw new common_1.NotFoundException(`Aucun utilisateur trouvé avec l'email ${email}`);
+            }
+            return user;
+        }
+        catch (error) {
+            if (error instanceof library_1.PrismaClientKnownRequestError) {
+                throw new Error('Erreur de base de données');
+            }
+            throw error;
+        }
+    }
+    async incrementLike() { }
+    async incrementDislike() { }
+    async decrementLike() { }
+    async decremementDislike() { }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService, jwt_1.JwtService])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

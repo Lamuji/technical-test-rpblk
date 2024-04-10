@@ -1,0 +1,66 @@
+/* Style pour la modal de fond, plein écran avec un fond semi-transparent */
+.modal {
+    position: fixed; /* Positionnement fixe par rapport à la fenêtre */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Largeur de la vue entière */
+    height: 100vh; /* Hauteur de la vue entière */
+    background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+    display: flex;
+    align-items: center; /* Centrage vertical */
+    justify-content: center; /* Centrage horizontal */
+    z-index: 1000; /* S'assurer que la modal est au-dessus des autres éléments */
+  }
+  
+  /* Style pour le contenu de la modal */
+  .modal-content {
+    background: #ffffff; /* Fond blanc pour la modal */
+    padding: 2rem; /* Espacement interne */
+    border-radius: 8px; /* Coins arrondis */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+    width: 80%; /* Largeur de la modal */
+    max-width: 500px; /* Largeur maximale de la modal */
+  }
+  
+  /* Style pour le champ de texte de la modal */
+  .modal-content textarea {
+    width: 100%; /* Utiliser toute la largeur de la modal */
+    padding: 0.5rem; /* Espacement interne */
+    margin-bottom: 1rem; /* Espacement sous le champ de texte */
+    border: 1px solid #ddd; /* Bordure subtile */
+    border-radius: 4px; /* Coins légèrement arrondis */
+    height: 100px; /* Hauteur fixe pour le champ de texte */
+    resize: none; /* Empêcher l'utilisateur de redimensionner le champ */
+    background: #f9f9f9; /* Fond légèrement gris pour le champ de texte */
+  }
+  
+  /* Style pour les boutons de la modal */
+  .modal-content button {
+    font-weight: bold; /* Texte en gras */
+    padding: 0.5rem 1rem; /* Espacement interne */
+    margin-right: 0.5rem; /* Espacement entre les boutons */
+    border: 1px solid ;
+    border-color: #7b61ff; /* Pas de bordure */
+    border-radius: 4px; /* Coins légèrement arrondis */
+    cursor: pointer; /* Curseur en forme de main au survol */
+    
+  }
+  
+  /* Style spécifique pour le bouton 'Post' */
+  .modal-content button:nth-child(3) {
+    background-color: #7b61ff; /* Couleur de fond violet */
+    color: white; /* Texte en blanc */
+  }
+  
+  /* Style spécifique pour le bouton 'Cancel' */
+  .modal-content button:nth-child(2) {
+    background-color: #eee; /* Couleur de fond gris clair */
+    color: #7b61ff; /* Texte en gris foncé */
+  }
+  
+  .character-count {
+    text-align: right; /* Aligner le texte à droite */
+    margin-bottom: 1rem; /* Espacement sous le compteur */
+    color: #666; /* Couleur du texte */
+    font-size: 0.875rem; /* Taille de la police */
+  }

@@ -28,11 +28,15 @@ export class AuthService {
 
             if (!validatePassword)
                 throw new NotFoundException('Invalid password')
+
+            //const payload = { email: users.email, username: users.username, firstname: users.firstname, lastname: users.lastname};
             const token = this.jwtService.sign(
-                { email},
+                { email },
                 { secret: process.env.JWT_SECRET, expiresIn: '1h' }
               );
-              return { token };
+              return { token , users : { email: users.email, username: users.username, firstname: users.firstname, lastname: users.lastname}
+
+              }
     }
 
     async register(createDto: RegisterUserDto): Promise<any> {

@@ -1,11 +1,13 @@
 
 import { PrismaService } from "src/prisma.service";
 import { Post, User } from "./users.model";
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 @Injectable()
 export class UsersService {
-    constructor(private prismaService : PrismaService){}
+    constructor(private prismaService : PrismaService, private jwtService : JwtService){}
 
     async getAllUsers(): Promise<User[]>{
         return this.prismaService.client.user.findMany();
@@ -26,16 +28,38 @@ export class UsersService {
         })
     }
 
-    async createPost(username: string, message: string): Promise<any> {
-        return this.prismaService.client.post.create({
-          data: {
-            username,
-            message,
-            like: 0,
-            dislike: 0 // Initialisation du nombre de 'like' à 0
-          },
-        });
-      }
+    async createPost(data: Post): Promise<Post> {
+      return this.prismaService.client.post.create({
+        data,
+      });
+    }
 
-    async incrementLike()
+      async getUserByEmail(email: string): Promise<any> {
+        try {
+          const user = await this.prismaService.client.user.findUnique({
+            where: {
+              email: email,
+            },
+          });
+          if (!user) {
+            throw new NotFoundException(`Aucun utilisateur trouvé avec l'email ${email}`);
+          }
+          return user;
+        } catch (error) {
+          if (error instanceof PrismaClientKnownRequestError) {
+            // Gérer les erreurs connues de Prisma ici
+            throw new Error('Erreur de base de données');
+          }
+          throw error; // Renvoyer les autres erreurs inattendues
+        }
+      }
+    
+
+    async incrementLike(){}
+
+    async incrementDislike() {}
+
+    async decrementLike(){}
+
+    async decremementDislike(){}
 }

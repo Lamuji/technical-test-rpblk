@@ -1,10 +1,16 @@
 import { PrismaService } from "src/prisma.service";
-import { User } from "./users.model";
+import { Post, User } from "./users.model";
+import { JwtService } from "@nestjs/jwt";
 export declare class UsersService {
     private prismaService;
-    constructor(prismaService: PrismaService);
+    private jwtService;
+    constructor(prismaService: PrismaService, jwtService: JwtService);
     getAllUsers(): Promise<User[]>;
     registerUser(data: User): Promise<any>;
-    createPost(username: string, message: string): Promise<any>;
-    incrementLike(): any;
+    createPost(data: Post): Promise<Post>;
+    getUserByEmail(email: string): Promise<any>;
+    incrementLike(): Promise<void>;
+    incrementDislike(): Promise<void>;
+    decrementLike(): Promise<void>;
+    decremementDislike(): Promise<void>;
 }

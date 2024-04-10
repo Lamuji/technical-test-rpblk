@@ -1,6 +1,7 @@
-import { Controller, Get, Post , Body, Req, Res, HttpException, HttpStatus } from "@nestjs/common";
+import { Controller, Get, Post , Body, Req, Res, HttpException, HttpStatus, Query, NotFoundException } from "@nestjs/common";
 import { Request, Response} from 'express'
 import { UsersService } from "./users.service";
+import { Post as post} from "./users.model";
 
 @Controller("users")
 export class UsersController {
@@ -21,18 +22,30 @@ export class UsersController {
                 status: "ok",
                 message: "Internal server error."
             })
-
         }
     }
 
-    @Post('createPost')
-    async createPost(@Req() request, @Res() response, @Body() body) {
+    @Get('getUser')
+    async getUserByEmail(@Res({passthrough: true}) response: Response, @Query('email') email: string) {
         try {
-            const username = request.user.username; // Ou d'où vous récupérez l'username de l'utilisateur
-            const newTweet = await this.userService.createPost(username, body);
-            return newTweet; // Nest gère la réponse, pas besoin d'injecter @Res()
-          } catch (error) {
-            throw new HttpException('Failed to create a post', HttpStatus.BAD_REQUEST);
-          }
+            const result = await this.userService.getUserByEmail(email);
+            return response.status(200).json({
+                result: result
+            })
         }
+        catch(err){
+            return response.status(500).json({
+            status:'Error',
+            message:'Internal server error.',
+        })
+    }
+}
+    
+    
+
+    @Post('createPost')
+    async create(@Body() postData: post): Promise<post> {
+    return this.userService.createPost(postData);
+    }
+
 }
