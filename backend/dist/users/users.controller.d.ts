@@ -7,4 +7,5 @@ export declare class UsersController {
     getAllUsers(request: Request, response: Response): Promise<any>;
     getUserByEmail(response: Response, email: string): Promise<Response<any, Record<string, any>>>;
     create(postData: post): Promise<post>;
+    getAllPosts(): Promise<post[]>;
 }

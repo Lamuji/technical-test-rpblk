@@ -4,10 +4,12 @@ import { Post, User } from "./users.model";
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PostGateway } from '../post.gateway';
+
 
 @Injectable()
 export class UsersService {
-    constructor(private prismaService : PrismaService, private jwtService : JwtService){}
+    constructor(private prismaService : PrismaService, private jwtService : JwtService, private readonly postGateway: PostGateway){}
 
     async getAllUsers(): Promise<User[]>{
         return this.prismaService.client.user.findMany();
@@ -52,6 +54,13 @@ export class UsersService {
           }
           throw error; // Renvoyer les autres erreurs inattendues
         }
+      }
+      async getAllPosts(): Promise<Post[]> {
+        return this.prismaService.client.post.findMany();
+      }
+
+      async sendTweet(post: any) {
+        this.postGateway.sendPost(post);
       }
     
 

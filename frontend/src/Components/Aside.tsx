@@ -76,6 +76,8 @@ export default function Aside() {
           dislike: 0
         }),
       });
+
+      console.log(response.json())
   
       if (!response.ok)
         throw new Error('Network response was not ok');

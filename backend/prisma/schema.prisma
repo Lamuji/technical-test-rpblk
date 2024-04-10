@@ -25,6 +25,8 @@ model User {
 model Post {
   id Int @id @default(autoincrement())
   username String @mydb.VarChar(100)
+  firstname String @mydb.VarChar(100)
+  lastname String @mydb.VarChar(100)
   message String @mydb.VarChar(500)
   like Int @default(0)
   dislike Int @default(0)

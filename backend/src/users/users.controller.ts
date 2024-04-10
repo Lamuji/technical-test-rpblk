@@ -48,4 +48,8 @@ export class UsersController {
     return this.userService.createPost(postData);
     }
 
+    @Get('getPosts')
+    async getAllPosts() {
+      return this.userService.getAllPosts();
+    }
 }

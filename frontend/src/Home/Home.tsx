@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import './style.css'
 import { Link } from 'react-router-dom'
 import Tweets from '../Components/Tweets'
@@ -7,6 +7,20 @@ import logo from '../logo_home.png'
 
 
 export default function Home() {
+  const [refreshKey, setRefreshKey] = useState(0); // Utilisation d'une clé de rafraîchissement pour forcer le composant Tweets à se mettre à jour
+
+  useEffect(() => {
+    // Rafraîchissement périodique toutes les 5 secondes (par exemple)
+    const intervalId = setInterval(() => {
+      // Incrément de la clé de rafraîchissement pour forcer le rechargement du composant Tweets
+      setRefreshKey((prevKey: number) => prevKey + 1);
+    }, 5000);
+
+    // Nettoyage de l'intervalle lors du démontage du composant
+    return () => clearInterval(intervalId);
+  }, []);
+
+
   return (
     <div className='body'>
     <header className="header">
@@ -16,7 +30,7 @@ export default function Home() {
   
   <div className="main-container">
       <Aside/>
-      <Tweets/>
+      <Tweets key={refreshKey}/>
   </div>
   </div>
   )

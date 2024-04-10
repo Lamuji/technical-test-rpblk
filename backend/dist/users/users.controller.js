@@ -53,6 +53,9 @@ let UsersController = class UsersController {
     async create(postData) {
         return this.userService.createPost(postData);
     }
+    async getAllPosts() {
+        return this.userService.getAllPosts();
+    }
 };
 __decorate([
     (0, common_1.Get)('userlist'),
@@ -77,6 +80,12 @@ __decorate([
     __metadata("design:paramtypes", [users_model_1.Post]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)('getPosts'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getAllPosts", null);
 UsersController = __decorate([
     (0, common_1.Controller)("users"),
     __metadata("design:paramtypes", [users_service_1.UsersService])
