@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import  './aside.css'
 import { Avatar, AvatarImage, AvatarFallback} from '../@/components/ui/avatar'
 import { Button } from '../@/components/ui/button'
@@ -19,8 +18,6 @@ function getInitials(username: string | undefined, lastname: string | undefined)
   return initials;
 }
 
-const initials = getInitials("john", "doe");
-
 export default function Aside() {
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -31,14 +28,14 @@ export default function Aside() {
   const { decodedToken , isExpired } = useJwt(token) as { decodedToken: { email : string }; isExpired: boolean };
 
   useEffect(() => {
-    // Fonction pour récupérer les données utilisateur
+    
     const fetchUserData = async () => {
       if (decodedToken && decodedToken.email && !isExpired) {
         try {
           const response = await fetch(`http://localhost:3001/users/getUser?email=${decodedToken.email}`);
           if (response.status == 200) {
             const data = await response.json();
-            setUserData(data.result); // Mettre à jour l'état avec les données utilisateur
+            setUserData(data.result); 
           } else {
             console.error('Failed to fetch user data');
           }
@@ -68,21 +65,19 @@ export default function Aside() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: userData?.username, // Remplacez par le nom d'utilisateur actuel
-          firstname: userData?.firstname, // Remplacez par le prénom actuel
-          lastname: userData?.lastname, // Remplacez par le nom de famille actuel
+          username: userData?.username,
+          firstname: userData?.firstname,
+          lastname: userData?.lastname, 
           message: postContent,
           like: 0,
           dislike: 0
         }),
       });
-
-      console.log(response.json())
   
       if (!response.ok)
         throw new Error('Network response was not ok');
 
-      setModalOpen(false); // Close the modal after submitting the post
+      setModalOpen(false);
 
     } catch (error) {
       console.error('Failed to send post:', error);

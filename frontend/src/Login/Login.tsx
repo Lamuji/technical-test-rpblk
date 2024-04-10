@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link, Router, useNavigate } from 'react-router-dom'
+import  { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import './style.css'
 import logo from '../logo.png'
 import {Button} from '../@/components/ui/button'
@@ -7,12 +7,11 @@ import {Button} from '../@/components/ui/button'
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Pour la redirection après la connexion réussie
+  const navigate = useNavigate(); 
   let token;
   let userLogged;
   const handleSubmit = async (event: { preventDefault: () => void }) => {
-    event.preventDefault(); // Empêche le rechargement de la page
-
+    event.preventDefault(); 
     try {
       const response = await fetch('http://localhost:3001/auth/login', {
         method: 'POST',

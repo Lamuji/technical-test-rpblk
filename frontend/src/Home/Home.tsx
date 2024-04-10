@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react'
+import {useState, useEffect} from 'react'
 import './style.css'
-import { Link } from 'react-router-dom'
+
 import Tweets from '../Components/Tweets'
 import Aside from '../Components/Aside'
 import logo from '../logo_home.png'

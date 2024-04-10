@@ -15,10 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
-const users_model_1 = require("./users.model");
+const post_dto_1 = require("../auth/dto/post-dto");
+const prisma_service_1 = require("../prisma.service");
 let UsersController = class UsersController {
-    constructor(userService) {
+    constructor(userService, prisma) {
         this.userService = userService;
+        this.prisma = prisma;
     }
     async getAllUsers(request, response) {
         try {
@@ -50,11 +52,63 @@ let UsersController = class UsersController {
             });
         }
     }
-    async create(postData) {
-        return this.userService.createPost(postData);
+    async create(createPostDto) {
+        return this.userService.createPost(createPostDto);
     }
     async getAllPosts() {
         return this.userService.getAllPosts();
+    }
+    async addLike(postData) {
+        try {
+            const post = await this.prisma.client.post.findUnique({
+                where: {
+                    id: postData.id,
+                },
+            });
+            if (!post) {
+                return { success: false, message: 'Le post n\'existe pas.' };
+            }
+            await this.prisma.client.post.update({
+                where: {
+                    id: postData.id,
+                },
+                data: {
+                    like: {
+                        increment: 1,
+                    },
+                },
+            });
+            return { success: true, message: 'Like ajouté avec succès.' };
+        }
+        catch (error) {
+            return { success: false, message: 'Une erreur est survenue lors de l\'ajout du like.' };
+        }
+    }
+    async addDislike(postData) {
+        try {
+            const post = await this.prisma.client.post.findUnique({
+                where: {
+                    id: postData.id,
+                },
+            });
+            if (!post) {
+                return { success: false, message: 'Le post n\'existe pas.' };
+            }
+            await this.prisma.client.post.update({
+                where: {
+                    id: postData.id,
+                },
+                data: {
+                    dislike: {
+                        increment: 1,
+                    },
+                },
+            });
+            return { success: true, message: 'Dislike ajouté avec succès.' };
+        }
+        catch (error) {
+            return { success: false, message: 'Une erreur est survenue lors de l\'ajout du dislike.' };
+        }
     }
 };
 __decorate([
@@ -77,7 +131,7 @@ __decorate([
     (0, common_1.Post)('createPost'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [users_model_1.Post]),
+    __metadata("design:paramtypes", [post_dto_1.CreatePostDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "create", null);
 __decorate([
@@ -86,9 +140,23 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getAllPosts", null);
+__decorate([
+    (0, common_1.Post)('like'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [post_dto_1.CreatePostDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "addLike", null);
+__decorate([
+    (0, common_1.Post)('dislike'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [post_dto_1.CreatePostDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "addDislike", null);
 UsersController = __decorate([
     (0, common_1.Controller)("users"),
-    __metadata("design:paramtypes", [users_service_1.UsersService])
+    __metadata("design:paramtypes", [users_service_1.UsersService, prisma_service_1.PrismaService])
 ], UsersController);
 exports.UsersController = UsersController;
 //# sourceMappingURL=users.controller.js.map

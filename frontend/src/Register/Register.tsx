@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, Router, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './style.css'
 import logo from '../logo.png'
 import { Button } from '../@/components/ui/button'

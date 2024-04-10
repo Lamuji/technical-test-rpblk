@@ -61,22 +61,34 @@
   .tweet-action img {
     margin-right: 5px;
   }
-  .likes, .dislikes {
-    display: flex;
-    align-items: center;
-  }
+
+
   .likes:before, .dislikes:before {
     display: inline-block;
-    content: '';
-    width: 20px;
-    height: 20px;
-    background-size: contain;
-    background-repeat: no-repeat;
+    content: '\1F44D'; /* thumbs up emoji for like, you can change it as per your preference */
+    font-size: 20px; /* Adjust font size as needed */
     margin-right: 5px;
-  }
-  .likes:before {
-    background-image: 🤍; /* Remplacez par le chemin d'accès de votre icône de pouce vers le haut */
-  }
-  .dislikes:before {
-    background-image: ❤️; /* Remplacez par le chemin d'accès de votre icône de pouce vers le bas */
-  }
+}
+
+.dislikes:before {
+    content: '\1F44E'; /* thumbs down emoji for dislike, you can change it as per your preference */
+}
+
+.likes, .dislikes {
+    display: flex;
+    align-items: center;
+    margin-top: 5px; /* Add margin to separate from tweet content */
+}
+
+.tweet-action {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-right: 10px; /* Add some space between action buttons */
+    color: #757575;
+}
+
+.tweet-action.likes .count,
+.tweet-action.dislikes .count {
+    margin-left: 5px; /* Add some space between icon and counter */
+}

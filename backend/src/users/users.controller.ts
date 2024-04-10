@@ -2,10 +2,12 @@ import { Controller, Get, Post , Body, Req, Res, HttpException, HttpStatus, Quer
 import { Request, Response} from 'express'
 import { UsersService } from "./users.service";
 import { Post as post} from "./users.model";
+import { CreatePostDto } from "src/auth/dto/post-dto";
+import { PrismaService } from "src/prisma.service";
 
 @Controller("users")
 export class UsersController {
-    constructor(private readonly userService: UsersService){}
+    constructor(private readonly userService: UsersService, private readonly prisma: PrismaService){}
 
     @Get('userlist')
     async getAllUsers(@Req() request: Request, @Res() response: Response): Promise<any> {
@@ -41,15 +43,75 @@ export class UsersController {
     }
 }
     
-    
 
     @Post('createPost')
-    async create(@Body() postData: post): Promise<post> {
-    return this.userService.createPost(postData);
+    async create(@Body() createPostDto: CreatePostDto) {
+        return this.userService.createPost(createPostDto);
     }
 
     @Get('getPosts')
     async getAllPosts() {
       return this.userService.getAllPosts();
     }
+
+    @Post('like')
+    async addLike(@Body() postData: CreatePostDto) {
+        try {
+          const post = await this.prisma.client.post.findUnique({
+            where: {
+              id: postData.id,
+            },
+          });
+    
+          if (!post) {
+            return { success: false, message: 'Le post n\'existe pas.' };
+          }
+    
+          await this.prisma.client.post.update({
+            where: {
+              id: postData.id,
+            },
+            data: {
+              like: {
+                increment: 1,
+              },
+            },
+          });
+    
+          return { success: true, message: 'Like ajouté avec succès.' };
+        } catch (error) {
+          return { success: false, message: 'Une erreur est survenue lors de l\'ajout du like.' };
+        }
+      }
+
+      @Post('dislike')
+  async addDislike(@Body() postData: CreatePostDto) {
+    try {
+      const post = await this.prisma.client.post.findUnique({
+        where: {
+          id: postData.id,
+        },
+      });
+
+      if (!post) {
+        return { success: false, message: 'Le post n\'existe pas.' };
+      }
+
+      await this.prisma.client.post.update({
+        where: {
+          id: postData.id,
+        },
+        data: {
+          dislike: {
+            increment: 1,
+          },
+        },
+      });
+
+      return { success: true, message: 'Dislike ajouté avec succès.' };
+    } catch (error) {
+      return { success: false, message: 'Une erreur est survenue lors de l\'ajout du dislike.' };
+    }
+  }
 }
+    

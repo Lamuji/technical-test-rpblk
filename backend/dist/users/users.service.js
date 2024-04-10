@@ -14,12 +14,10 @@ const prisma_service_1 = require("../prisma.service");
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const library_1 = require("@prisma/client/runtime/library");
-const post_gateway_1 = require("../post.gateway");
 let UsersService = class UsersService {
-    constructor(prismaService, jwtService, postGateway) {
+    constructor(prismaService, jwtService) {
         this.prismaService = prismaService;
         this.jwtService = jwtService;
-        this.postGateway = postGateway;
     }
     async getAllUsers() {
         return this.prismaService.client.user.findMany();
@@ -64,9 +62,6 @@ let UsersService = class UsersService {
     async getAllPosts() {
         return this.prismaService.client.post.findMany();
     }
-    async sendTweet(post) {
-        this.postGateway.sendPost(post);
-    }
     async incrementLike() { }
     async incrementDislike() { }
     async decrementLike() { }
@@ -74,7 +69,7 @@ let UsersService = class UsersService {
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService, jwt_1.JwtService, post_gateway_1.PostGateway])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService, jwt_1.JwtService])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

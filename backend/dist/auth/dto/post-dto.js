@@ -14,10 +14,35 @@ const class_validator_1 = require("class-validator");
 class CreatePostDto {
 }
 __decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: 'Username cannot be empty.' }),
+    (0, class_validator_1.IsString)({ message: 'Username must be a string.' }),
+    __metadata("design:type", String)
+], CreatePostDto.prototype, "username", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: 'Firstname cannot be empty.' }),
+    (0, class_validator_1.IsString)({ message: 'Firstname must be a string.' }),
+    __metadata("design:type", String)
+], CreatePostDto.prototype, "firstname", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: 'Lastname cannot be empty.' }),
+    (0, class_validator_1.IsString)({ message: 'Lastname must be a string.' }),
+    __metadata("design:type", String)
+], CreatePostDto.prototype, "lastname", void 0);
+__decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'The content cannot be empty.' }),
     (0, class_validator_1.IsString)({ message: 'The content must be a string.' }),
     (0, class_validator_1.MaxLength)(280, { message: 'The content is too long. Maximum length is 280 characters.' }),
     __metadata("design:type", String)
-], CreatePostDto.prototype, "content", void 0);
+], CreatePostDto.prototype, "message", void 0);
+__decorate([
+    (0, class_validator_1.IsInt)({ message: 'Likes must be an integer.' }),
+    (0, class_validator_1.Min)(0, { message: 'Likes cannot be negative.' }),
+    __metadata("design:type", Number)
+], CreatePostDto.prototype, "like", void 0);
+__decorate([
+    (0, class_validator_1.IsInt)({ message: 'Dislikes must be an integer.' }),
+    (0, class_validator_1.Min)(0, { message: 'Dislikes cannot be negative.' }),
+    __metadata("design:type", Number)
+], CreatePostDto.prototype, "dislike", void 0);
 exports.CreatePostDto = CreatePostDto;
 //# sourceMappingURL=post-dto.js.map
