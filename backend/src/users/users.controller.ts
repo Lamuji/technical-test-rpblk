@@ -31,9 +31,7 @@ export class UsersController {
     async getUserByEmail(@Res({passthrough: true}) response: Response, @Query('email') email: string) {
         try {
             const result = await this.userService.getUserByEmail(email);
-            return response.status(200).json({
-                result: result
-            })
+            return result
         }
         catch(err){
             return response.status(500).json({

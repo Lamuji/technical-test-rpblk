@@ -14,3 +14,8 @@ export declare class Post implements Prisma.PostCreateInput {
     like: number;
     dislike: number;
 }
+export declare class Profil implements Prisma.ProfilCreateInput {
+    username: string;
+    firstname: string;
+    lastname: string;
+}

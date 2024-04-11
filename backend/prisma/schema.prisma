@@ -31,3 +31,10 @@ model Post {
   like Int @default(0)
   dislike Int @default(0)
 }
+
+model Profil {
+  id Int @id @default(autoincrement())
+  username String @mydb.VarChar(100)
+  firstname String @mydb.VarChar(100)
+  lastname String @mydb.VarChar(100)
+}

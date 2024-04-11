@@ -1,6 +1,6 @@
 
 import { PrismaService } from "src/prisma.service";
-import { Post, User } from "./users.model";
+import { Post, Profil, User } from "./users.model";
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
@@ -31,11 +31,11 @@ export class UsersService {
 
     async createPost(data: Post): Promise<Post> {
       return this.prismaService.client.post.create({
-        data,
+        data
       });
     }
 
-      async getUserByEmail(email: string): Promise<any> {
+      async getUserByEmail(email: string): Promise<Profil> {
         try {
           const user = await this.prismaService.client.user.findUnique({
             where: {

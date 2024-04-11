@@ -37,7 +37,7 @@ let UsersService = class UsersService {
     }
     async createPost(data) {
         return this.prismaService.client.post.create({
-            data,
+            data
         });
     }
     async getUserByEmail(email) {

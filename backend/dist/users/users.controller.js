@@ -41,9 +41,7 @@ let UsersController = class UsersController {
     async getUserByEmail(response, email) {
         try {
             const result = await this.userService.getUserByEmail(email);
-            return response.status(200).json({
-                result: result
-            });
+            return result;
         }
         catch (err) {
             return response.status(500).json({
