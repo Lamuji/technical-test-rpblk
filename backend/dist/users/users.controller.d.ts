@@ -11,11 +11,17 @@ export declare class UsersController {
     getUserByEmail(response: Response, email: string): Promise<import("./users.model").Profil | Response<any, Record<string, any>>>;
     create(createPostDto: CreatePostDto): Promise<post>;
     getAllPosts(): Promise<post[]>;
-    addLike(postData: CreatePostDto): Promise<{
+    toggleLike(postData: {
+        id: number;
+        liked: boolean;
+    }): Promise<{
         success: boolean;
         message: string;
     }>;
-    addDislike(postData: CreatePostDto): Promise<{
+    toggleDislike(postData: {
+        id: number;
+        disliked: boolean;
+    }): Promise<{
         success: boolean;
         message: string;
     }>;

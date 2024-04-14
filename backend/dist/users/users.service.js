@@ -62,10 +62,29 @@ let UsersService = class UsersService {
     async getAllPosts() {
         return this.prismaService.client.post.findMany();
     }
-    async incrementLike() { }
-    async incrementDislike() { }
-    async decrementLike() { }
-    async decremementDislike() { }
+    async updateLike(postId, increment) {
+        const action = increment ? { increment: 1 } : { decrement: 1 };
+        await this.prismaService.client.post.update({
+            where: { id: postId },
+            data: { like: action }
+        });
+    }
+    async updateDislike(postId, increment) {
+        const action = increment ? { increment: 1 } : { decrement: 1 };
+        await this.prismaService.client.post.update({
+            where: { id: postId },
+            data: { dislike: action }
+        });
+    }
+    async getPostById(postId) {
+        const post = await this.prismaService.client.post.findUnique({
+            where: { id: postId }
+        });
+        if (!post) {
+            throw new common_1.NotFoundException(`Post not found with ID ${postId}`);
+        }
+        return post;
+    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),

@@ -52,64 +52,61 @@ export class UsersController {
       return this.userService.getAllPosts();
     }
 
-    @Post('like')
-    async addLike(@Body() postData: CreatePostDto) {
+    @Post('toggleLike')
+    async toggleLike(@Body() postData: { id: number, liked: boolean }) {
         try {
           const post = await this.prisma.client.post.findUnique({
             where: {
               id: postData.id,
             },
           });
-    
+        
           if (!post) {
             return { success: false, message: 'Le post n\'existe pas.' };
           }
-    
+        
           await this.prisma.client.post.update({
             where: {
               id: postData.id,
             },
             data: {
-              like: {
-                increment: 1,
-              },
+              like: postData.liked ? { increment: 1 } : { decrement: 1 },
             },
           });
-    
-          return { success: true, message: 'Like ajouté avec succès.' };
+        
+          return { success: true, message: `Like ${postData.liked ? 'ajouté' : 'retiré'} avec succès.` };
         } catch (error) {
-          return { success: false, message: 'Une erreur est survenue lors de l\'ajout du like.' };
+          return { success: false, message: 'Une erreur est survenue.' };
         }
-      }
-
-      @Post('dislike')
-  async addDislike(@Body() postData: CreatePostDto) {
-    try {
-      const post = await this.prisma.client.post.findUnique({
-        where: {
-          id: postData.id,
-        },
-      });
-
-      if (!post) {
-        return { success: false, message: 'Le post n\'existe pas.' };
-      }
-
-      await this.prisma.client.post.update({
-        where: {
-          id: postData.id,
-        },
-        data: {
-          dislike: {
-            increment: 1,
-          },
-        },
-      });
-
-      return { success: true, message: 'Dislike ajouté avec succès.' };
-    } catch (error) {
-      return { success: false, message: 'Une erreur est survenue lors de l\'ajout du dislike.' };
     }
-  }
+    
+    @Post('toggleDislike')
+    async toggleDislike(@Body() postData: { id: number, disliked: boolean }) {
+        try {
+          const post = await this.prisma.client.post.findUnique({
+            where: {
+              id: postData.id,
+            },
+          });
+        
+          if (!post) {
+            return { success: false, message: 'Le post n\'existe pas.' };
+          }
+        
+          await this.prisma.client.post.update({
+            where: {
+              id: postData.id,
+            },
+            data: {
+              dislike: postData.disliked ? { increment: 1 } : { decrement: 1 },
+            },
+          });
+        
+          return { success: true, message: `Dislike ${postData.disliked ? 'ajouté' : 'retiré'} avec succès.` };
+        } catch (error) {
+          return { success: false, message: 'Une erreur est survenue.' };
+        }
+    }
+    
 }
     

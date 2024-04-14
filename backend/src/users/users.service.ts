@@ -57,12 +57,30 @@ export class UsersService {
       async getAllPosts(): Promise<Post[]> {
         return this.prismaService.client.post.findMany();
       }
+      
+      async updateLike(postId: number, increment: boolean): Promise<void> {
+        const action = increment ? { increment: 1 } : { decrement: 1 };
+        await this.prismaService.client.post.update({
+            where: { id: postId },
+            data: { like: action }
+        });
+    }
 
-    async incrementLike(){}
+    async updateDislike(postId: number, increment: boolean): Promise<void> {
+        const action = increment ? { increment: 1 } : { decrement: 1 };
+        await this.prismaService.client.post.update({
+            where: { id: postId },
+            data: { dislike: action }
+        });
+    }
 
-    async incrementDislike() {}
-
-    async decrementLike(){}
-
-    async decremementDislike(){}
+    async getPostById(postId: number): Promise<Post> {
+        const post = await this.prismaService.client.post.findUnique({
+            where: { id: postId }
+        });
+        if (!post) {
+            throw new NotFoundException(`Post not found with ID ${postId}`);
+        }
+        return post;
+    }
 }
