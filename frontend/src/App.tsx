@@ -5,10 +5,14 @@ import Home from './Home/Home';
 import Login from './Login/Login';
 import Register from './Register/Register';
 import PrivateRoutes from './utils/ProtectedRoute';
+import { io } from 'socket.io-client';
+import { socket } from './socket';
+import { useEffect, useState } from 'react';
 
 
 
 function App() {
+  
   return (
     <Router>
       <Routes>

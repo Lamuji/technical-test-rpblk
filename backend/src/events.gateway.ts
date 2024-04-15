@@ -14,20 +14,12 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     constructor(private userService: UsersService) {}
 
     handleConnection(client: Socket, ...args: any[]) {
-        console.log(`Client connected: ${client.id}`);
-        this.userService.getAllPosts().then(posts => {
-            client.emit('allPosts', posts);  // Send all posts to the newly connected client
-        });
-    }
-    
-    @SubscribeMessage('createPost')
-    async handleCreatePost(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
-        const newPost = await this.userService.createPost(data);
-        this.server.emit('postCreated', newPost);  // Broadcast the new post to all clients
+        console.log(`Client connected -------------------------------------------------: ${client.id}`);
     }
 
+
     handleDisconnect(client: Socket) {
-        console.log(`Client disconnected: ${client.id}`);
+        console.log(`Client disconnected------------------------------------------------: ${client.id}`);
     }
 
     @SubscribeMessage('likePost')
@@ -41,12 +33,19 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     async handleDislikePost(@MessageBody() data: { postId: number, increment: boolean }, @ConnectedSocket() client: Socket) {
         await this.userService.updateDislike(data.postId, data.increment);
         const updatedPost = await this.userService.getPostById(data.postId);
-        this.server.emit('postUpdated', updatedPost);
+        this.server.on('postUpdated', postId);
     }
 
     @SubscribeMessage('newPost')
     async handleNewPost(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+        console.log("new post:", data)
         const newPost = await this.userService.createPost(data);
-        this.server.emit('newPost', newPost);  // Emit the new post to all connected clients
+        this.server.on('newPost', newPost);  // Emit the new post to all connected clients
+    }
+    @SubscribeMessage('getPosts')
+    async getPosts(@ConnectedSocket() client: Socket) {
+        this.userService.getAllPosts().then(posts => {
+            this.server.emit('getPosts', posts);  // Send all posts to the newly connected client
+        });  // Emit the new post to all connected clients
     }
 }

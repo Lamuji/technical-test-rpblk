@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import './style.css'
 import logo from '../logo.png'
 import {Button} from '../@/components/ui/button'
+import { socket } from '../socket'
 
 export default function Login() {
   const [email, setEmail] = useState('');

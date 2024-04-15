@@ -6,7 +6,6 @@ export declare class EventsGateway implements OnGatewayConnection, OnGatewayDisc
     server: Server;
     constructor(userService: UsersService);
     handleConnection(client: Socket, ...args: any[]): void;
-    handleCreatePost(data: any, client: Socket): Promise<void>;
     handleDisconnect(client: Socket): void;
     handleLikePost(data: {
         postId: number;
@@ -17,4 +16,5 @@ export declare class EventsGateway implements OnGatewayConnection, OnGatewayDisc
         increment: boolean;
     }, client: Socket): Promise<void>;
     handleNewPost(data: any, client: Socket): Promise<void>;
+    getPosts(client: Socket): Promise<void>;
 }

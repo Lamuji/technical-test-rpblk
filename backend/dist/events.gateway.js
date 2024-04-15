@@ -21,17 +21,10 @@ let EventsGateway = class EventsGateway {
         this.userService = userService;
     }
     handleConnection(client, ...args) {
-        console.log(`Client connected: ${client.id}`);
-        this.userService.getAllPosts().then(posts => {
-            client.emit('allPosts', posts);
-        });
-    }
-    async handleCreatePost(data, client) {
-        const newPost = await this.userService.createPost(data);
-        this.server.emit('postCreated', newPost);
+        console.log(`Client connected -------------------------------------------------: ${client.id}`);
     }
     handleDisconnect(client) {
-        console.log(`Client disconnected: ${client.id}`);
+        console.log(`Client disconnected------------------------------------------------: ${client.id}`);
     }
     async handleLikePost(data, client) {
         await this.userService.updateLike(data.postId, data.increment);
@@ -44,22 +37,20 @@ let EventsGateway = class EventsGateway {
         this.server.emit('postUpdated', updatedPost);
     }
     async handleNewPost(data, client) {
+        console.log("new post:", data);
         const newPost = await this.userService.createPost(data);
         this.server.emit('newPost', newPost);
+    }
+    async getPosts(client) {
+        this.userService.getAllPosts().then(posts => {
+            this.server.emit('getPosts', posts);
+        });
     }
 };
 __decorate([
     (0, websockets_1.WebSocketServer)(),
     __metadata("design:type", socket_io_1.Server)
 ], EventsGateway.prototype, "server", void 0);
-__decorate([
-    (0, websockets_1.SubscribeMessage)('createPost'),
-    __param(0, (0, websockets_1.MessageBody)()),
-    __param(1, (0, websockets_1.ConnectedSocket)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
-    __metadata("design:returntype", Promise)
-], EventsGateway.prototype, "handleCreatePost", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('likePost'),
     __param(0, (0, websockets_1.MessageBody)()),
@@ -84,6 +75,13 @@ __decorate([
     __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
     __metadata("design:returntype", Promise)
 ], EventsGateway.prototype, "handleNewPost", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('getPosts'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket]),
+    __metadata("design:returntype", Promise)
+], EventsGateway.prototype, "getPosts", null);
 EventsGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {

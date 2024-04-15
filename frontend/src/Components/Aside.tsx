@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
-import './aside.css'
-import { Avatar, AvatarImage, AvatarFallback } from '../@/components/ui/avatar'
-import { Button } from '../@/components/ui/button'
+import { useEffect, useState } from 'react';
+import './aside.css';
+import { Avatar, AvatarImage, AvatarFallback } from '../@/components/ui/avatar';
+import { Button } from '../@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { useJwt } from 'react-jwt'
+import { useJwt } from 'react-jwt';
 import Modal from './Modal';
-import io from 'socket.io-client';
+import { socket } from '../socket';
 
 interface UserData {
   lastname: string;
@@ -13,29 +13,20 @@ interface UserData {
   username: string;
 }
 
-
 export default function Aside() {
-  const socket = io("http://localhost:3001");
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [userData, setUserData] = useState<UserData>();
-  const token = localStorage.getItem('token') as string
+  const token = localStorage.getItem('token') as string;
   const navigate = useNavigate();
   const { decodedToken, isExpired } = useJwt(token) as { decodedToken: { email: string }; isExpired: boolean };
 
   useEffect(() => {
-
-    socket.on('connect', () => console.log('Connected to WebSocket server'));
-    
-    socket.on('postCreated', (post) => {
-      console.log('New post:', post);
-      // Ajouter ici la logique pour mettre à jour l'interface utilisateur avec le nouveau post
-    });
-
     const fetchUserData = async () => {
       if (decodedToken && decodedToken.email && !isExpired) {
         try {
           const response = await fetch(`http://localhost:3001/users/getUser?email=${decodedToken.email}`);
-          if (response.status == 200) {
+          if (response.status === 200) {
             const data = await response.json();
             setUserData(data);
           } else {
@@ -49,15 +40,12 @@ export default function Aside() {
 
     fetchUserData();
 
-    return () => {
-      socket.disconnect();  // Nettoyer en déconnectant le socket lors du démontage du composant
-    };
   }, [decodedToken, isExpired]);
 
   const handleClick = () => {
-    localStorage.removeItem('token')
+    localStorage.removeItem('token');
     navigate('/Login');
-  }
+  };
 
   const handleCreatePostClick = () => {
     setModalOpen(true);
@@ -65,23 +53,24 @@ export default function Aside() {
 
   const sendPost = (postContent: string) => {
     try {
-      socket.emit('createPost', {
+      socket.emit('newPost', {
         username: userData?.username,
         firstname: userData?.firstname,
-        lastname: userData?.lastname, 
+        lastname: userData?.lastname,
         message: postContent,
       });
       setModalOpen(false);
+      
     } catch (error) {
       console.error('Failed to send post via WebSocket:', error);
     }
-  }
+  };
 
   return (
     <aside className="sidebar">
       <div className="profile">
         <Avatar>
-          <AvatarImage className='relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full '/>
+          <AvatarImage className='relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full' />
           <AvatarFallback className='text-[#7B61FF] font-bold'>{`${userData?.lastname.charAt(0).toUpperCase()}${userData?.firstname.charAt(0).toUpperCase()}`}</AvatarFallback>
         </Avatar>
         <div className="profile-info">
@@ -91,16 +80,10 @@ export default function Aside() {
       </div>
       <nav className="navigation">
         <Button className='bg-[rgba(123,97,255,0.05)] hover:bg-[rgba(123,97,255,0.10)] font-bold text-[#7B61FF]'>Home</Button>
-        <Button className='bg-[rgba(123,97,255,0.9)] hover:bg-[rgba(123,97,255,1)] font-bold'
-          onClick={handleCreatePostClick}
-        >Create a new post</Button>
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setModalOpen(false)}
-          onPostSubmit={sendPost}
-        />
+        <Button className='bg-[rgba(123,97,255,0.9)] hover:bg-[rgba(123,97,255,1)] font-bold' onClick={handleCreatePostClick}>Create a new post</Button>
+        <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} onPostSubmit={sendPost} />
         <Button onClick={handleClick}>Sign out</Button>
       </nav>
     </aside>
-  )
+  );
 }
