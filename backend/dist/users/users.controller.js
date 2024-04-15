@@ -41,9 +41,7 @@ let UsersController = class UsersController {
     async getUserByEmail(response, email) {
         try {
             const result = await this.userService.getUserByEmail(email);
-            return response.status(200).json({
-                result: result
-            });
+            return result;
         }
         catch (err) {
             return response.status(500).json({
@@ -58,7 +56,7 @@ let UsersController = class UsersController {
     async getAllPosts() {
         return this.userService.getAllPosts();
     }
-    async addLike(postData) {
+    async toggleLike(postData) {
         try {
             const post = await this.prisma.client.post.findUnique({
                 where: {
@@ -73,18 +71,16 @@ let UsersController = class UsersController {
                     id: postData.id,
                 },
                 data: {
-                    like: {
-                        increment: 1,
-                    },
+                    like: postData.liked ? { increment: 1 } : { decrement: 1 },
                 },
             });
-            return { success: true, message: 'Like ajouté avec succès.' };
+            return { success: true, message: `Like ${postData.liked ? 'ajouté' : 'retiré'} avec succès.` };
         }
         catch (error) {
-            return { success: false, message: 'Une erreur est survenue lors de l\'ajout du like.' };
+            return { success: false, message: 'Une erreur est survenue.' };
         }
     }
-    async addDislike(postData) {
+    async toggleDislike(postData) {
         try {
             const post = await this.prisma.client.post.findUnique({
                 where: {
@@ -99,15 +95,13 @@ let UsersController = class UsersController {
                     id: postData.id,
                 },
                 data: {
-                    dislike: {
-                        increment: 1,
-                    },
+                    dislike: postData.disliked ? { increment: 1 } : { decrement: 1 },
                 },
             });
-            return { success: true, message: 'Dislike ajouté avec succès.' };
+            return { success: true, message: `Dislike ${postData.disliked ? 'ajouté' : 'retiré'} avec succès.` };
         }
         catch (error) {
-            return { success: false, message: 'Une erreur est survenue lors de l\'ajout du dislike.' };
+            return { success: false, message: 'Une erreur est survenue.' };
         }
     }
 };
@@ -141,19 +135,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getAllPosts", null);
 __decorate([
-    (0, common_1.Post)('like'),
+    (0, common_1.Post)('toggleLike'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [post_dto_1.CreatePostDto]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "addLike", null);
+], UsersController.prototype, "toggleLike", null);
 __decorate([
-    (0, common_1.Post)('dislike'),
+    (0, common_1.Post)('toggleDislike'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [post_dto_1.CreatePostDto]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "addDislike", null);
+], UsersController.prototype, "toggleDislike", null);
 UsersController = __decorate([
     (0, common_1.Controller)("users"),
     __metadata("design:paramtypes", [users_service_1.UsersService, prisma_service_1.PrismaService])

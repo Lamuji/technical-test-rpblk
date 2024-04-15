@@ -4,22 +4,11 @@ import './style.css'
 import Tweets from '../Components/Tweets'
 import Aside from '../Components/Aside'
 import logo from '../logo_home.png'
+import { socket } from '../socket'
 
 
 export default function Home() {
-  const [refreshKey, setRefreshKey] = useState(0); // Utilisation d'une clé de rafraîchissement pour forcer le composant Tweets à se mettre à jour
-
-  useEffect(() => {
-    // Rafraîchissement périodique toutes les 5 secondes (par exemple)
-    const intervalId = setInterval(() => {
-      // Incrément de la clé de rafraîchissement pour forcer le rechargement du composant Tweets
-      setRefreshKey((prevKey: number) => prevKey + 1);
-    }, 5000);
-
-    // Nettoyage de l'intervalle lors du démontage du composant
-    return () => clearInterval(intervalId);
-  }, []);
-
+  socket.connect()
 
   return (
     <div className='body'>
@@ -30,7 +19,7 @@ export default function Home() {
   
   <div className="main-container">
       <Aside/>
-      <Tweets key={refreshKey}/>
+      <Tweets/>
   </div>
   </div>
   )

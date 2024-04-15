@@ -37,7 +37,7 @@ let UsersService = class UsersService {
     }
     async createPost(data) {
         return this.prismaService.client.post.create({
-            data,
+            data
         });
     }
     async getUserByEmail(email) {
@@ -62,10 +62,61 @@ let UsersService = class UsersService {
     async getAllPosts() {
         return this.prismaService.client.post.findMany();
     }
-    async incrementLike() { }
-    async incrementDislike() { }
-    async decrementLike() { }
-    async decremementDislike() { }
+    async findPostById(postId) {
+        return this.prismaService.client.post.findUnique({
+            where: { id: postId },
+        });
+    }
+    async updateLike(postId, increment) {
+        if (increment) {
+            console.log("increment ok");
+            await this.prismaService.client.post.update({
+                where: { id: postId },
+                data: { like: { increment: 1 } }
+            });
+        }
+        else {
+            const post = await this.prismaService.client.post.findUnique({
+                where: { id: postId },
+                select: { like: true }
+            });
+            if (post && post.like > 0) {
+                await this.prismaService.client.post.update({
+                    where: { id: postId },
+                    data: { like: { decrement: 1 } }
+                });
+            }
+        }
+    }
+    async updateDislike(postId, increment) {
+        if (increment) {
+            await this.prismaService.client.post.update({
+                where: { id: postId },
+                data: { dislike: { increment: 1 } }
+            });
+        }
+        else {
+            const post = await this.prismaService.client.post.findUnique({
+                where: { id: postId },
+                select: { dislike: true }
+            });
+            if (post && post.dislike > 0) {
+                await this.prismaService.client.post.update({
+                    where: { id: postId },
+                    data: { dislike: { decrement: 1 } }
+                });
+            }
+        }
+    }
+    async getPostById(postId) {
+        const post = await this.prismaService.client.post.findUnique({
+            where: { id: postId }
+        });
+        if (!post) {
+            throw new common_1.NotFoundException(`Post not found with ID ${postId}`);
+        }
+        return post;
+    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),

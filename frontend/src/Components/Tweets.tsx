@@ -1,6 +1,9 @@
-import {useState, useEffect} from 'react'
-import './tweets.css'
-import { Avatar, AvatarFallback, AvatarImage } from '../@/components/ui/avatar'
+import {useState, useEffect} from 'react';
+import './tweets.css';
+import io from "socket.io-client";
+import { Avatar, AvatarFallback, AvatarImage } from '../@/components/ui/avatar';
+import { socket } from '../socket';
+import { Button } from '../@/components/ui/button';
 
 interface Posts {
   id: number;
@@ -14,95 +17,69 @@ interface Posts {
 
 export default function Tweets() {
   const [posts, setPosts] = useState<Posts[]>([]);
-  const [likedPosts, setLikedPosts] = useState<number[]>([]);
-
-  const fetchPosts = () => {
-    fetch('http://localhost:3001/users/getPosts')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-          setPosts(data.reverse());
-      })
-      .catch(error => {
-        console.error('Error fetching posts:', error);
-      });
-  };
 
   useEffect(() => {
-    fetchPosts(); 
-    const intervalId = setInterval(fetchPosts, 100);
-    return () => clearInterval(intervalId);
+
+  socket.emit('getPosts');
+
+  socket.on('getPosts', (posts: Posts[]) => {
+    console.log("Received all posts: ", posts);
+    setPosts([...posts].reverse());
+  });
+
+  socket.on('postUpdated', (updatedPost: Posts) => {
+
+    setPosts(prevPosts => {
+      const index = prevPosts.findIndex(post => post.id === updatedPost.id);
+      if (index !== -1) {
+
+        const newPosts = [...prevPosts];
+        newPosts[index] = {...prevPosts[index], ...updatedPost};
+        return newPosts;
+      }
+      return prevPosts;
+    });
+  });
+
+
+  socket.on("error", (error) => {
+    console.error("Socket error: ", error);
+  });
+
   }, []);
 
-  const handleLike = async (postId: number) => {
-    try {
-      if (likedPosts.includes(postId)) {
-        console.log('Vous avez déjà aimé ce post.');
-        return;
-      }
-      const response = await fetch('http://localhost:3001/users/like', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: postId }),
-      });
-      setLikedPosts([...likedPosts, postId]);
-      setPosts(prevPosts =>
-        prevPosts.map(post =>
-          post.id === postId ? { ...post, like: post.like + 1 } : post
-        )
-      );
-    } catch (error) {
-      console.error('Erreur:', error);
-    }
-  };
+  const handleInteraction = (post: Posts, type: 'like' | 'dislike') => {
+    const increment = type === 'like' ? !post.like : !post.dislike;
+    socket.emit(type, { postId: post.id, increment });
+};
 
-  const handleDislike = async (postId: number) => {
-    try {
-      const response = await fetch('http://localhost:3001/users/dislike', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: postId }),
-      });
-    } catch (error) {
-      console.error('Erreur:', error);
-    }
-  };
-
-  return (
-    <div className='tweets-container'>
-      {posts && posts.map((post : Posts) => (
-        <div className="tweet" key={post.id}>
-          <div className="profile">
-            <Avatar>
-              <AvatarImage className='relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full' />
-              <AvatarFallback className='text-[#7B61FF] font-bold'>{`${post.lastname.charAt(0).toUpperCase()}${post.firstname.charAt(0).toUpperCase()}`}</AvatarFallback>
-            </Avatar>
-            <div className="profile-info">
-              <h2 className='font-bold'>{`${post.lastname} ${post.firstname}`}</h2>
-              <p className='font-bold text-[#7B61FF]'>@{post.username}</p>
-            </div>
-          </div>
-          <div className="tweet-body">
-            {post.message}
-          </div>
-          <div className="tweet-actions">
-            <div className="tweet-action likes" onClick={() => handleLike(post.id)}>
-              {post.like}
-            </div>
-            <div className="tweet-action dislikes" onClick={() => handleDislike(post.id)}>
-              {post.dislike}
-            </div>
+return (
+  <div className='tweets-container'>
+    {posts && posts.map((post : Posts) => (
+      <div className="tweet" key={post.id}>
+        <div className="profile">
+          <Avatar>
+            <AvatarImage className='relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full' />
+            <AvatarFallback className='text-[#7B61FF] font-bold'>{`${post.lastname.charAt(0).toUpperCase()}${post.firstname.charAt(0).toUpperCase()}`}</AvatarFallback>
+          </Avatar>
+          <div className="profile-info">
+            <h2 className='font-bold'>{`${post.lastname} ${post.firstname}`}</h2>
+            <p className='font-bold text-[#7B61FF]'>@{post.username}</p>
           </div>
         </div>
-      ))}
-    </div>
-  );
+        <div className="tweet-body">
+          {post.message}
+        </div>
+        <div className="tweet-actions">
+          <div className="tweet-action likes" onClick={() => handleInteraction(post, 'like')}>
+            {post.like}
+          </div>
+          <div className="tweet-action dislikes" onClick={() => handleInteraction(post, 'dislike')}>
+            {post.dislike}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
 }

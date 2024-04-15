@@ -9,6 +9,7 @@ gap: 24px;
 position: absolute;
 left: 32px;
 top: 100px;
+min-width: 220px
 }
 
 .profile {

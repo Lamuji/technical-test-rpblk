@@ -8,14 +8,20 @@ export declare class UsersController {
     private readonly prisma;
     constructor(userService: UsersService, prisma: PrismaService);
     getAllUsers(request: Request, response: Response): Promise<any>;
-    getUserByEmail(response: Response, email: string): Promise<Response<any, Record<string, any>>>;
+    getUserByEmail(response: Response, email: string): Promise<import("./users.model").Profil | Response<any, Record<string, any>>>;
     create(createPostDto: CreatePostDto): Promise<post>;
     getAllPosts(): Promise<post[]>;
-    addLike(postData: CreatePostDto): Promise<{
+    toggleLike(postData: {
+        id: number;
+        liked: boolean;
+    }): Promise<{
         success: boolean;
         message: string;
     }>;
-    addDislike(postData: CreatePostDto): Promise<{
+    toggleDislike(postData: {
+        id: number;
+        disliked: boolean;
+    }): Promise<{
         success: boolean;
         message: string;
     }>;

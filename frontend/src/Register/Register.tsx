@@ -33,7 +33,7 @@ export default function Register() {
 
       if (response.status === 200) { // Vérification si le code de statut est 200
         console.log('Registration successful');
-        navigate('/home');
+        navigate('/Login');
       } else {
         // Gérer les réponses non réussies ici (par exemple, afficher un message d'erreur)
         console.error('Registration failed with status:', response.status);
