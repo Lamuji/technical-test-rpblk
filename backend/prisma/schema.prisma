@@ -20,6 +20,7 @@ model User {
   username String @unique @mydb.VarChar(45)
   email String @unique @mydb.VarChar(45)
   password String @mydb.VarChar(100)
+
 }
 
 model Post {
@@ -30,6 +31,7 @@ model Post {
   message String @mydb.VarChar(500)
   like Int @default(0)
   dislike Int @default(0)
+
 }
 
 model Profil {

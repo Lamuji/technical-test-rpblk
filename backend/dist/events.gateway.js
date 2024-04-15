@@ -21,10 +21,10 @@ let EventsGateway = class EventsGateway {
         this.userService = userService;
     }
     handleConnection(client, ...args) {
-        console.log(`Client connected -------------------------------------------------: ${client.id}`);
+        console.log(`Client connected -----: ${client.id}`);
     }
     handleDisconnect(client) {
-        console.log(`Client disconnected------------------------------------------------: ${client.id}`);
+        console.log(`Client disconnected -----: ${client.id}`);
     }
     async handleLikePost(data, client) {
         await this.userService.updateLike(data.postId, data.increment);

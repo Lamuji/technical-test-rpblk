@@ -10,6 +10,7 @@ export declare class UsersService {
     createPost(data: Post): Promise<Post>;
     getUserByEmail(email: string): Promise<Profil>;
     getAllPosts(): Promise<Post[]>;
+    findPostById(postId: number): Promise<Post | null>;
     updateLike(postId: number, increment: boolean): Promise<void>;
     updateDislike(postId: number, increment: boolean): Promise<void>;
     getPostById(postId: number): Promise<Post>;

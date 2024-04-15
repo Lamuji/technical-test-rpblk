@@ -57,23 +57,58 @@ export class UsersService {
       async getAllPosts(): Promise<Post[]> {
         return this.prismaService.client.post.findMany();
       }
+
+      async findPostById(postId: number): Promise<Post | null> {
+        return this.prismaService.client.post.findUnique({
+            where: { id: postId },
+        });
+    }
       
       async updateLike(postId: number, increment: boolean): Promise<void> {
-        const action = increment ? { increment: 1 } : { decrement: 1 };
-        await this.prismaService.client.post.update({
-            where: { id: postId },
-            data: { like: action }
-        });
+        if (increment) {
+            console.log("increment ok")
+            // Increment the 'like' count
+            await this.prismaService.client.post.update({
+                where: { id: postId },
+                data: { like: { increment: 1 } }
+            });
+        } else {
+            // Decrement the 'like' count, but ensure it doesn't go below zero
+            const post = await this.prismaService.client.post.findUnique({
+                where: { id: postId },
+                select: { like: true }
+            });
+            if (post && post.like > 0) {
+                await this.prismaService.client.post.update({
+                    where: { id: postId },
+                    data: { like: { decrement: 1 } }
+                });
+            }
+        }
     }
-
+    
     async updateDislike(postId: number, increment: boolean): Promise<void> {
-        const action = increment ? { increment: 1 } : { decrement: 1 };
-        await this.prismaService.client.post.update({
-            where: { id: postId },
-            data: { dislike: action }
-        });
+        if (increment) {
+            // Increment the 'dislike' count
+            await this.prismaService.client.post.update({
+                where: { id: postId },
+                data: { dislike: { increment: 1 } }
+            });
+        } else {
+            // Decrement the 'dislike' count, but ensure it doesn't go below zero
+            const post = await this.prismaService.client.post.findUnique({
+                where: { id: postId },
+                select: { dislike: true }
+            });
+            if (post && post.dislike > 0) {
+                await this.prismaService.client.post.update({
+                    where: { id: postId },
+                    data: { dislike: { decrement: 1 } }
+                });
+            }
+        }
     }
-
+    
     async getPostById(postId: number): Promise<Post> {
         const post = await this.prismaService.client.post.findUnique({
             where: { id: postId }
@@ -83,4 +118,5 @@ export class UsersService {
         }
         return post;
     }
+
 }

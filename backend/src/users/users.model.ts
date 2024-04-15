@@ -22,3 +22,5 @@ export class Profil implements Prisma.ProfilCreateInput {
     firstname: string;
     lastname: string;
 }
+
+

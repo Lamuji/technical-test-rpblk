@@ -62,19 +62,51 @@ let UsersService = class UsersService {
     async getAllPosts() {
         return this.prismaService.client.post.findMany();
     }
-    async updateLike(postId, increment) {
-        const action = increment ? { increment: 1 } : { decrement: 1 };
-        await this.prismaService.client.post.update({
+    async findPostById(postId) {
+        return this.prismaService.client.post.findUnique({
             where: { id: postId },
-            data: { like: action }
         });
     }
+    async updateLike(postId, increment) {
+        if (increment) {
+            console.log("increment ok");
+            await this.prismaService.client.post.update({
+                where: { id: postId },
+                data: { like: { increment: 1 } }
+            });
+        }
+        else {
+            const post = await this.prismaService.client.post.findUnique({
+                where: { id: postId },
+                select: { like: true }
+            });
+            if (post && post.like > 0) {
+                await this.prismaService.client.post.update({
+                    where: { id: postId },
+                    data: { like: { decrement: 1 } }
+                });
+            }
+        }
+    }
     async updateDislike(postId, increment) {
-        const action = increment ? { increment: 1 } : { decrement: 1 };
-        await this.prismaService.client.post.update({
-            where: { id: postId },
-            data: { dislike: action }
-        });
+        if (increment) {
+            await this.prismaService.client.post.update({
+                where: { id: postId },
+                data: { dislike: { increment: 1 } }
+            });
+        }
+        else {
+            const post = await this.prismaService.client.post.findUnique({
+                where: { id: postId },
+                select: { dislike: true }
+            });
+            if (post && post.dislike > 0) {
+                await this.prismaService.client.post.update({
+                    where: { id: postId },
+                    data: { dislike: { decrement: 1 } }
+                });
+            }
+        }
     }
     async getPostById(postId) {
         const post = await this.prismaService.client.post.findUnique({

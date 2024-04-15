@@ -60,6 +60,10 @@ export default function Aside() {
         message: postContent,
       });
       setModalOpen(false);
+
+      setTimeout(() => {
+        socket.emit('getPosts');  // Request the latest list of posts
+      }, 500)
       
     } catch (error) {
       console.error('Failed to send post via WebSocket:', error);
